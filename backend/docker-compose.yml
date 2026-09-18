@@ -1,0 +1,15 @@
+services:
+  # API auto-hospedada (Módulo de Suporte Geral + Planejamento da Execução)
+  # que substitui as Cloud Functions — evita a exigência do plano pago
+  # Blaze, já que fala com o Firestore/Auth reais via Admin SDK (Spark,
+  # gratuito) em vez de depender do Cloud Run das Functions.
+  api:
+    build: ./api
+    ports:
+      - "8090:8090"
+    environment:
+      PORT: 8090
+      GOOGLE_APPLICATION_CREDENTIALS: /run/secrets/service-account.json
+    volumes:
+      - ./api/service-account.json:/run/secrets/service-account.json:ro
+    restart: unless-stopped

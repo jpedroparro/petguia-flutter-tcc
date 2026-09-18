@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "756900196286",
+    "project_id": "tcc-udesc-enchentes",
+    "storage_bucket": "tcc-udesc-enchentes.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756900196286:android:486401bc26273fa00813ef",
+        "android_client_info": {
+          "package_name": "br.com.jpedroparro.petguia_enchentes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSPk-FiBv_-a9QITwm6txCewxLMMiG4qM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

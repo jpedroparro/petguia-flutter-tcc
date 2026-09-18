@@ -1,0 +1,65 @@
+rules_version = '2';
+
+// Módulo de Suporte Geral (RADIAN) — governança de acesso.
+// Todas as escritas de negócio passam pela API auto-hospedada (Admin SDK,
+// que ignora estas regras) para manter a lógica de decisão centralizada no
+// módulo de Análise e Decisão / Planejamento da Execução, não espalhada em
+// regras de segurança. O cliente só lê.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticado() {
+      return request.auth != null;
+    }
+
+    function papel() {
+      return request.auth.token.role;
+    }
+
+    function ehEquipe() {
+      return autenticado() && (papel() == "admin" || papel() == "operador");
+    }
+
+    // Animais resgatados — leitura pública (portal), como no sistema web.
+    match /animais/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Abrigos — leitura pública (disponibilidade), escrita só via Functions.
+    match /abrigos/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Cotas de inundação por rua — dado de referência público.
+    match /ruas_cota/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Histórico de leituras do nível do rio — público.
+    match /leituras_rio/{id} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Solicitações de reunificação — contêm dados de contato; só a equipe lê.
+    match /solicitacoes_reunificacao/{id} {
+      allow read: if ehEquipe();
+      allow write: if false;
+    }
+
+    // Solicitações de tutoria — contêm CPF (LGPD); só a equipe lê.
+    match /solicitacoes_tutoria/{id} {
+      allow read: if ehEquipe();
+      allow write: if false;
+    }
+
+    // Alertas de resgate urgente — contêm dados de contato; só a equipe lê.
+    match /solicitacoes_resgate/{id} {
+      allow read: if ehEquipe();
+      allow write: if false;
+    }
+  }
+}

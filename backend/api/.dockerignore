@@ -1,0 +1,8 @@
+node_modules
+lib
+src/**/*.test.ts
+jest.config.js
+tsconfig.dev.json
+tsconfig.jest.json
+.env
+service-account*.json

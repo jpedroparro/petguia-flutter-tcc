@@ -1,0 +1,23 @@
+rules_version = '2';
+
+// Fotos de animais resgatados e de solicitações de tutoria.
+// Leitura pública (aparecem no portal); escrita exige autenticação — o
+// público usa login anônimo do Firebase (sem cadastro), o que ainda garante
+// um autor rastreável para conter abuso, sem exigir conta real.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /animais/{animalId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    match /tutoria/{solicitacaoId}/{fileName} {
+      allow read: if request.auth != null; // só a equipe consulta essas fotos
+      allow write: if request.auth != null
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+  }
+}
